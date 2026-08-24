@@ -1,17 +1,25 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <iup.h>
+#include <im.h>
+#include <iupim.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     IupOpen(&argc, &argv);
 
-    Ihandle *label = IupLabel("IUP Setup Successful on Linux!");
-    Ihandle *dlg = IupDialog(IupVbox(label, NULL));
-    
-    IupSetAttribute(dlg, "TITLE", "IUP Test");
-    IupSetAttribute(dlg, "SIZE", "200x100");
+    Ihandle *vbox;
+    Ihandle *image = IupLoadImage("./images/sample_640×426.bmp");
 
-    IupShowXY(dlg, IUP_CENTER, IUP_CENTER);
+    vbox = IupVbox(image, NULL);
+    Ihandle *window = IupDialog(vbox);
+
+    IupSetAttribute(window, "TITLE", "IMAGE MANIPULATION SOFTWARE");
+    IupSetAttribute(window, "SIZE", "600x400");
+
+    IupShowXY(window, IUP_CENTER, IUP_CENTER);
+
     IupMainLoop();
 
     IupClose();

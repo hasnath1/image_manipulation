@@ -1,3 +1,4 @@
 {
-    "cSpell.words": ["libx", "zxvf"]
+    "cSpell.words": ["libx", "zxvf"],
+    "C_Cpp.errorSquiggles": "enabled"
 }
