@@ -1,19 +1,38 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <iup.h>
-#include <im.h>
-#include <iupim.h>
 
 #include "../include/utils.h"
+
+int functionRunWhenClicked(Ihandle *self)
+{
+    IupMessage("Message", "This message appeared because you clicked the button");
+    return 0;
+}
 
 int main(int argc, char **argv)
 {
     IupOpen(&argc, &argv);
-    //    IupMainLoop();
+    Ihandle *window, *btn, *label, *vbox;
 
-    printf("%d\n", add(20, 40));
+    label = IupLabel("Hello world!!!\n");
+    btn = IupButton("Click me !!!", NULL);
+
+    vbox = IupVbox(label, btn, NULL);
+
+    IupSetCallback(btn, "ACTION", (Icallback)functionRunWhenClicked);
+
+    window = IupDialog(vbox);
+
+    IupSetAttribute(window, "TITLE", "Image Manipulation Software");
+    IupSetAttribute(window, "SIZE", "600x400");
+
+    IupShowXY(window, IUP_CENTER, IUP_CENTER);
+
+    IupMainLoop();
 
     IupClose();
-    return 0;
+    return EXIT_SUCCESS;
 }
