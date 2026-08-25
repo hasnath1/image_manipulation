@@ -8,10 +8,21 @@
 
 #include "../include/custom.h"
 
+AppState state;
+
 int main(int argc, char **argv)
 {
+    state.currentImageFile = NULL;
+    state.currentImage = NULL;
+    state.undoImage = NULL;
+    state.imageWidget = NULL;
+
     IupOpen(&argc, &argv);
     setupGui();
     IupClose();
+
+    printf("%s\n", state.currentImageFile);
+
+    // Todo:  FREE APP STATE
     return EXIT_SUCCESS;
 }
