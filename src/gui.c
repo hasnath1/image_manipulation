@@ -11,7 +11,10 @@
 
 void setupGui()
 {
+  // main window and Vertical box to organize elements top to bottom
   Ihandle *window, *vbox;
+
+  // all menu items
   Ihandle *file_menu, *item_open, *item_exit, *item_save_as;
   Ihandle *menu, *sub1_menu;
 
@@ -23,6 +26,15 @@ void setupGui()
   Ihandle *btn_rotate90 = IupButton("Rotate 90deg", NULL);
   Ihandle *btn_blur = IupButton("Blur", NULL);
   Ihandle *btn_undo = IupButton("Undo", NULL);
+
+  // Added all the call back functions to buttons
+  IupSetCallback(btn_grayScale, "ACTION", (Icallback)grayScale_clb);
+  IupSetCallback(btn_Inversion, "ACTION", (Icallback)Inversion_clb);
+  IupSetCallback(btn_horizontalFlip, "ACTION", (Icallback)horizontalFlip_clb);
+  IupSetCallback(btn_verticalFlip, "ACTION", (Icallback)verticalFlip_clb);
+  IupSetCallback(btn_rotate90, "ACTION", (Icallback)rotate90_clb);
+  IupSetCallback(btn_blur, "ACTION", (Icallback)blur_clb);
+  IupSetCallback(btn_undo, "ACTION", (Icallback)undo_clb);
 
   Ihandle *hbox = IupHbox(
       btn_grayScale,
@@ -36,82 +48,58 @@ void setupGui()
 
   IupSetAttribute(hbox, "GAP", "4");
 
+  // Setting up general btn callbacks
+
   // TO DO :
   /*
     1.Implement "Brightness Adjustment" feature
     2."Crop" feature
   */
 
-  // Ihandle *hbox = IupHbox();
-
   Ihandle *label = IupLabel("Image : ");
-  int err;
 
-  imImage *img = imFileImageLoadBitmap("./images/color.bmp", 0, &err);
-  imImage *copy = imImageDuplicate(img);
+  // Image Label
+  state.imageWidget = IupLabel(NULL);
 
-  printf("%d\n", err);
+  // this is to force GTK-3 to treat the widget as a image widget
+  IupSetAttribute(state.imageWidget, "IMAGE", "DUMMY_INIT_NAME");
+  IupSetAttribute(state.imageWidget, "TITLE", NULL);
 
-  if (img->color_space == IM_RGB && img->data_type == IM_BYTE)
-  {
-    unsigned char *r = (unsigned char *)img->data[0];
-    unsigned char *g = (unsigned char *)img->data[1];
-    unsigned char *b = (unsigned char *)img->data[2];
+  IupSetAttribute(state.imageWidget, "EXPAND", "YES");
+  IupSetAttribute(state.imageWidget, "ALIGNMENT", "ACENTER:ACENTER");
 
-    int total_pixels = img->width * img->height;
-
-    for (int i = 0; i < total_pixels; i++)
-    {
-      unsigned char gray = (unsigned char)(0.299 * r[i] + 0.587 * g[i] + 0.114 * b[i]);
-
-      r[i] = gray;
-      g[i] = gray;
-      b[i] = gray;
-    }
-  }
-
-  printf("DONE\n");
-
-  Ihandle *image = IupImageFromImImage(copy);
-  Ihandle *image_label = IupLabel(NULL);
-  IupSetAttributeHandle(image_label, "IMAGE", image);
-
-  if (!img)
-  {
-    printf("Error : Couldn't load image data\n");
-    return;
-  }
-
-  // image_label = IupLabel(NULL);
-  // IupSetAttributeHandle(image_label, "IMAGE", img_data);
-
-  // state.imageWidget = image_label;
-
-  /*testing*/
-  // Ihandle *t = IupGetAttributeHandle(state.imageWidget, "IMAGE");
-
-  /*testing*/
-  // defining the menu items
+  // open
   item_open = IupItem("Open", NULL);
   IupSetCallback(item_open, "ACTION", (Icallback)open_clb);
 
+  // save as
   item_save_as = IupItem("Save as", NULL);
 
+  // exit
   item_exit = IupItem("Exit", NULL);
   IupSetCallback(item_exit, "ACTION", (Icallback)ext_clb);
+
+  // organizing menu items
   file_menu = IupMenu(item_open, item_save_as, IupSeparator(), item_exit, NULL);
   sub1_menu = IupSubmenu("File", file_menu);
   menu = IupMenu(sub1_menu, NULL);
 
-  // defining
-
-  vbox = IupVbox(hbox, label, image_label, NULL);
+  vbox = IupVbox(hbox, label, state.imageWidget, NULL);
+  IupSetAttribute(vbox, "ALIGNMENT", "ACENTER");
 
   // window initialization code
   window = IupDialog(vbox);
+
+  // setting the menu to window
   IupSetAttributeHandle(window, "MENU", menu);
-  IupSetAttribute(window, "TITLE", "Simple Notepad");
-  IupSetAttribute(window, "SIZE", "400x200");
+  IupSetAttribute(window, "TITLE", "Image Manipulation Software");
+  IupSetAttribute(window, "EXPAND", "YES");
+  IupSetAttribute(window, "SIZE", "500x300");
+  // I wanted to add these but it is blocked to the os level on my debian gtk environment
+  // I don't want to waste my time with this garbage.
+  // IupSetAttribute(window, "RESIZE", "YES");
+  // IupSetAttribute(window, "MAXBOX", "YES");
+  // IupSetAttribute(window, "MINBOX", "YES");
 
   IupShowXY(window, IUP_CENTER, IUP_CENTER);
 

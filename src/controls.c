@@ -9,6 +9,64 @@
 
 #include "../include/custom.h"
 
+int grayScale_clb(Ihandle *self)
+{
+  printState();
+
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
+int Inversion_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
+int horizontalFlip_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
+int verticalFlip_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
+int rotate90_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
+int blur_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
+int undo_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  return IUP_DEFAULT;
+};
+
 int open_clb(Ihandle *self)
 {
   Ihandle *file_dlg = IupFileDlg();
@@ -22,14 +80,23 @@ int open_clb(Ihandle *self)
   {
     char *fileName = IupGetAttribute(file_dlg, "VALUE");
     size_t s = strlen(fileName);
-    state.currentImageFile = (char *)malloc(sizeof(char) * (s + 1));
+    state.currentImageFile = (char *)malloc(sizeof(char) * (s));
     strcpy(state.currentImageFile, fileName);
-
     printf("%s\n", state.currentImageFile);
+
+    int err;
+    state.currentImage = imFileImageLoadBitmap(state.currentImageFile, 0, &err);
+    state.undoImage = imImageDuplicate(state.currentImage);
+
+    if (err)
+    {
+      printf("Error code in open_clb : %d\n", err);
+    }
+
+    updateUIImage(self);
   }
 
   IupDestroy(file_dlg);
-
   return IUP_DEFAULT;
 }
 

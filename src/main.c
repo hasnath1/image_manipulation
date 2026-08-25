@@ -21,8 +21,6 @@ int main(int argc, char **argv)
     setupGui();
     IupClose();
 
-    printf("%s\n", state.currentImageFile);
-
-    // Todo:  FREE APP STATE
+    freeState();
     return EXIT_SUCCESS;
 }
