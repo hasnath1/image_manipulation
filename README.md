@@ -9,7 +9,7 @@ A graphical Image Manipulation Software built using the C programming language a
 ## 👨‍💻 Author
 
 - **Name:** Hasnath Abdullah Akanda
-- **Course/ID:** [e.g., CSE1101L - BSSE18]
+- **Course/ID:** [Final Lab Project]
 - **GitHub:** [@hasnath1](https://github.com/hasnath1)
 
 ---
