@@ -24,7 +24,8 @@ int open_clb(Ihandle *self)
     size_t s = strlen(fileName);
     state.currentImageFile = (char *)malloc(sizeof(char) * (s));
     strcpy(state.currentImageFile, fileName);
-    printf("%s\n", state.currentImageFile);
+
+    // printf("%s\n", state.currentImageFile);
 
     int err;
     state.currentImage = imFileImageLoadBitmap(state.currentImageFile, 0, &err);
@@ -44,6 +45,50 @@ int open_clb(Ihandle *self)
 
 int saveAs_clb(Ihandle *self)
 {
+  if (!isAppStateValid())
+    return IUP_DEFAULT;
+
+  Ihandle *file_dlg = IupFileDlg();
+  IupSetAttribute(file_dlg, "DIALOGTYPE", "SAVE");
+  IupSetAttribute(file_dlg, "TITLE", "Save image as...");
+  IupSetAttribute(file_dlg, "EXTFILTER", "BMP Images (*.bmp)|*.bmp|");
+  IupSetAttribute(file_dlg, "EXTDEFAULT", "bmp");
+
+  IupPopup(file_dlg, IUP_CENTER, IUP_CENTER);
+
+  if (IupGetInt(file_dlg, "STATUS") != -1)
+  {
+    char *fileName = IupGetAttribute(file_dlg, "VALUE");
+    int err = imFileImageSave(fileName, "BMP", state.currentImage);
+
+    if (err)
+    {
+      // printf("Debug inside\n");
+      Ihandle *dlg = IupMessageDlg();
+
+      IupSetAttribute(dlg, "DIALOGTYPE", "WARNING");
+      IupSetAttribute(dlg, "TITLE", "Error!!!");
+      IupSetAttribute(dlg, "BUTTONS", "OK");
+      IupSetAttribute(dlg, "VALUE", "Couldn't save the image");
+      IupPopup(dlg, IUP_CURRENT, IUP_CURRENT);
+      IupDestroy(dlg);
+    }
+    else
+    {
+      Ihandle *dlg = IupMessageDlg();
+
+      IupSetAttribute(dlg, "DIALOGTYPE", "WARNING");
+      IupSetAttribute(dlg, "TITLE", "Success!!!");
+      IupSetAttribute(dlg, "BUTTONS", "OK");
+      IupSetAttribute(dlg, "VALUE", "Success fully saved the image");
+      IupPopup(dlg, IUP_CURRENT, IUP_CURRENT);
+      IupDestroy(dlg);
+    }
+
+    updateUIImage(self);
+  }
+
+  IupDestroy(file_dlg);
   return IUP_DEFAULT;
 }
 
