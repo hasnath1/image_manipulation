@@ -26,6 +26,7 @@ int rotate90_clb(Ihandle *self);
 int blur_clb(Ihandle *self);
 int undo_clb(Ihandle *self);
 
+int brightness_clb(Ihandle *self);
 
 // Menu callback functions
 int open_clb(Ihandle *self);

@@ -48,13 +48,27 @@ void setupGui()
 
   IupSetAttribute(hbox, "GAP", "4");
 
-  // Setting up general btn callbacks
-
   // TO DO :
   /*
     1.Implement "Brightness Adjustment" feature
     2."Crop" feature
   */
+
+  // Brightness adjustment label,input,button
+  Ihandle *brightnessLabel, *brightnessInput, *brightnessBtn, *hboxBrightnessAdjustment;
+  brightnessLabel = IupLabel("Brightness Adjustment (-255 to 255) : ");
+  brightnessInput = IupText(NULL);
+  brightnessBtn = IupButton("Apply", NULL);
+
+  // only take integers as input
+  IupSetAttribute(brightnessInput, "MASK", IUP_MASK_INT);
+  IupSetAttribute(brightnessInput, "VISIBLECOLUMNS", "5");
+
+  IupSetAttributeHandle(brightnessBtn, "MY_INPUT_TXT", brightnessInput);
+  IupSetCallback(brightnessBtn, "ACTION", (Icallback)brightness_clb);
+
+  hboxBrightnessAdjustment = IupHbox(brightnessLabel, brightnessInput, brightnessBtn, NULL);
+  IupSetAttribute(hboxBrightnessAdjustment, "ALIGNMENT", "ACENTER");
 
   Ihandle *label = IupLabel("Image : ");
 
@@ -87,8 +101,9 @@ void setupGui()
   sub1_menu = IupSubmenu("File", file_menu);
   menu = IupMenu(sub1_menu, NULL);
 
-  vbox = IupVbox(hbox, label, state.imageWidget, NULL);
+  vbox = IupVbox(hbox, hboxBrightnessAdjustment, label, state.imageWidget, NULL);
   IupSetAttribute(vbox, "ALIGNMENT", "ACENTER");
+  IupSetAttribute(vbox, "GAP", "10");
 
   // window initialization code
   window = IupDialog(vbox);

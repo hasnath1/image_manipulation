@@ -9,6 +9,61 @@
 
 #include "../include/custom.h"
 
+int brightness_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
+
+  Ihandle *inputBox = IupGetAttributeHandle(self, "MY_INPUT_TXT");
+  char *str = IupGetAttribute(inputBox, "VALUE");
+
+  if (!str || strlen(str) == 0)
+    return IUP_DEFAULT;
+
+  if (state.undoImage)
+    imImageDestroy(state.undoImage);
+
+  state.undoImage = imImageDuplicate(state.currentImage);
+
+  int adjustment = atoi(str);
+
+  int w = state.currentImage->width;
+  int h = state.currentImage->height;
+
+  unsigned char *r = state.currentImage->data[0];
+  unsigned char *g = state.currentImage->data[1];
+  unsigned char *b = state.currentImage->data[2];
+
+  for (int i = 0; i < w * h; i++)
+  {
+    int _r = r[i] + adjustment;
+    int _g = g[i] + adjustment;
+    int _b = b[i] + adjustment;
+
+    if (_r > 255)
+      _r = 255;
+    if (_g > 255)
+      _g = 255;
+    if (_b > 255)
+      _b = 255;
+
+    if (_r < 0)
+      _r = 0;
+    if (_g < 0)
+      _g = 0;
+    if (_b < 0)
+      _b = 0;
+
+    r[i] = (unsigned char)_r;
+    g[i] = (unsigned char)_g;
+    b[i] = (unsigned char)_b;
+  }
+
+  updateUIImage(self);
+
+  return IUP_DEFAULT;
+}
+
 int grayScale_clb(Ihandle *self)
 {
   // printState();
