@@ -9,6 +9,10 @@
 
 #include "../include/custom.h"
 
+
+
+
+
 int brightness_clb(Ihandle *self)
 {
   if (!isAppStateValid())

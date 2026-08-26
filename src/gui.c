@@ -50,8 +50,7 @@ void setupGui()
 
   // TO DO :
   /*
-    1.Implement "Brightness Adjustment" feature
-    2."Crop" feature
+    1."Crop" feature
   */
 
   // Brightness adjustment label,input,button
