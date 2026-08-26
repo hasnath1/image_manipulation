@@ -48,10 +48,43 @@ void setupGui()
 
   IupSetAttribute(hbox, "GAP", "4");
 
-  // TO DO :
-  /*
-    1."Crop" feature
-  */
+  Ihandle *cropXInput = IupText(NULL);
+  IupSetAttribute(cropXInput, "MASK", IUP_MASK_UINT);
+  IupSetAttribute(cropXInput, "VISIBLECOLUMNS", "4"); // Keep the boxes small
+
+  Ihandle *cropYInput = IupText(NULL);
+  IupSetAttribute(cropYInput, "MASK", IUP_MASK_UINT);
+  IupSetAttribute(cropYInput, "VISIBLECOLUMNS", "4");
+
+  Ihandle *cropWInput = IupText(NULL);
+  IupSetAttribute(cropWInput, "MASK", IUP_MASK_UINT);
+  IupSetAttribute(cropWInput, "VISIBLECOLUMNS", "4");
+
+  Ihandle *cropHInput = IupText(NULL);
+  IupSetAttribute(cropHInput, "MASK", IUP_MASK_UINT);
+  IupSetAttribute(cropHInput, "VISIBLECOLUMNS", "4");
+
+  // 2. Create the button and bind the callback
+  Ihandle *cropBtn = IupButton("Crop Image", NULL);
+  IupSetCallback(cropBtn, "ACTION", (Icallback)crop_clb);
+
+  // 3. Attach all 4 input boxes to the button so the callback can read them easily
+  IupSetAttributeHandle(cropBtn, "CROP_X", cropXInput);
+  IupSetAttributeHandle(cropBtn, "CROP_Y", cropYInput);
+  IupSetAttributeHandle(cropBtn, "CROP_W", cropWInput);
+  IupSetAttributeHandle(cropBtn, "CROP_H", cropHInput);
+
+  // 4. Pack them neatly together in a single row
+  Ihandle *hboxCrop = IupHbox(
+      IupLabel("Crop - X: "), cropXInput,
+      IupLabel(" Y: "), cropYInput,
+      IupLabel(" Width: "), cropWInput,
+      IupLabel(" Height: "), cropHInput,
+      cropBtn,
+      NULL);
+
+  IupSetAttribute(hboxCrop, "ALIGNMENT", "ACENTER");
+  IupSetAttribute(hboxCrop, "MARGIN", "10x10");
 
   // Brightness adjustment label,input,button
   Ihandle *brightnessLabel, *brightnessInput, *brightnessBtn, *hboxBrightnessAdjustment;
@@ -100,7 +133,7 @@ void setupGui()
   sub1_menu = IupSubmenu("File", file_menu);
   menu = IupMenu(sub1_menu, NULL);
 
-  vbox = IupVbox(hbox, hboxBrightnessAdjustment, label, state.imageWidget, NULL);
+  vbox = IupVbox(hbox, hboxBrightnessAdjustment, hboxCrop, label, state.imageWidget, NULL);
   IupSetAttribute(vbox, "ALIGNMENT", "ACENTER");
   IupSetAttribute(vbox, "GAP", "10");
 

@@ -9,9 +9,85 @@
 
 #include "../include/custom.h"
 
+int crop_clb(Ihandle *self)
+{
+  if (!isAppStateValid())
+    return IUP_CLOSE;
 
+  Ihandle *cropXInput = (Ihandle *)IupGetAttributeHandle(self, "CROP_X");
+  Ihandle *cropYInput = (Ihandle *)IupGetAttributeHandle(self, "CROP_Y");
+  Ihandle *cropWInput = (Ihandle *)IupGetAttributeHandle(self, "CROP_W");
+  Ihandle *cropHInput = (Ihandle *)IupGetAttributeHandle(self, "CROP_H");
 
+  char *strX = IupGetAttribute(cropXInput, "VALUE");
+  char *strY = IupGetAttribute(cropYInput, "VALUE");
+  char *strW = IupGetAttribute(cropWInput, "VALUE");
+  char *strH = IupGetAttribute(cropHInput, "VALUE");
 
+  int startX = (strX && strlen(strX) > 0) ? atoi(strX) : 0;
+  int startY = (strY && strlen(strY) > 0) ? atoi(strY) : 0;
+  int cropW = (strW && strlen(strW) > 0) ? atoi(strW) : 0;
+  int cropH = (strH && strlen(strH) > 0) ? atoi(strH) : 0;
+
+  int w = state.currentImage->width;
+  int h = state.currentImage->height;
+
+  if (cropW <= 0 || cropH <= 0 || startX >= w || startY >= h || startX < 0 || startY < 0)
+  {
+
+    Ihandle *dlg = IupMessageDlg();
+
+    IupSetAttribute(dlg, "DIALOGTYPE", "WARNING");
+    IupSetAttribute(dlg, "TITLE", "Error!!!");
+    IupSetAttribute(dlg, "BUTTONS", "OK");
+    IupSetAttribute(dlg, "VALUE", "Invalid Crop Inputs");
+    IupPopup(dlg, IUP_CURRENT, IUP_CURRENT);
+    IupDestroy(dlg);
+
+    return IUP_DEFAULT;
+  }
+
+  if (startX + cropW > w)
+    cropW = w - startX;
+  if (startY + cropH > h)
+    cropH = h - startY;
+
+  if (state.undoImage)
+    imImageDestroy(state.undoImage);
+
+  state.undoImage = imImageDuplicate(state.currentImage);
+  imImage *croppedImage = imImageCreate(cropW, cropH, state.currentImage->color_space, state.currentImage->data_type);
+
+  unsigned char *src_r = state.currentImage->data[0];
+  unsigned char *src_g = state.currentImage->data[1];
+  unsigned char *src_b = state.currentImage->data[2];
+
+  unsigned char *dst_r = croppedImage->data[0];
+  unsigned char *dst_g = croppedImage->data[1];
+  unsigned char *dst_b = croppedImage->data[2];
+
+  for (int i = 0; i < cropH; i++)
+  {
+    for (int j = 0; j < cropW; j++)
+    {
+      int old_col = startX + j;
+      int old_row = startY + i;
+
+      int src_idx = (old_row * w) + old_col;
+      int dst_idx = (i * cropW) + j;
+
+      dst_r[dst_idx] = src_r[src_idx];
+      dst_g[dst_idx] = src_g[src_idx];
+      dst_b[dst_idx] = src_b[src_idx];
+    }
+  }
+
+  imImageDestroy(state.currentImage);
+  state.currentImage = croppedImage;
+  updateUIImage(self);
+
+  return IUP_DEFAULT;
+}
 
 int brightness_clb(Ihandle *self)
 {
@@ -30,6 +106,20 @@ int brightness_clb(Ihandle *self)
   state.undoImage = imImageDuplicate(state.currentImage);
 
   int adjustment = atoi(str);
+
+  if (adjustment < -255 || adjustment > 255)
+  {
+    Ihandle *dlg = IupMessageDlg();
+
+    IupSetAttribute(dlg, "DIALOGTYPE", "WARNING");
+    IupSetAttribute(dlg, "TITLE", "Error!!!");
+    IupSetAttribute(dlg, "BUTTONS", "OK");
+    IupSetAttribute(dlg, "VALUE", "Invalid Brightness Adjustment Inputs");
+    IupPopup(dlg, IUP_CURRENT, IUP_CURRENT);
+    IupDestroy(dlg);
+
+    return IUP_DEFAULT;
+  }
 
   int w = state.currentImage->width;
   int h = state.currentImage->height;
