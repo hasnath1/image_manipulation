@@ -68,12 +68,15 @@ void setupGui()
   IupSetAttribute(state.imageWidget, "EXPAND", "YES");
   IupSetAttribute(state.imageWidget, "ALIGNMENT", "ACENTER:ACENTER");
 
+  // Menu items initialized and setup callbacks
+
   // open
   item_open = IupItem("Open", NULL);
   IupSetCallback(item_open, "ACTION", (Icallback)open_clb);
 
   // save as
   item_save_as = IupItem("Save as", NULL);
+  IupSetCallback(item_save_as, "ACTION", (Icallback)saveAs_clb);
 
   // exit
   item_exit = IupItem("Exit", NULL);
