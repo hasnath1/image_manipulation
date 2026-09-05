@@ -11,6 +11,7 @@ A graphical Image Manipulation Software built using the C programming language a
 - **Name:** Hasnath Abdullah Akanda
 - **Course/ID:** [Final Lab Project]
 - **GitHub:** [@hasnath1](https://github.com/hasnath1)
+- **Project Link:** [@image_manipulation](https://github.com/hasnath1/image_manipulation)
 
 ---
 
