@@ -13,6 +13,7 @@ A graphical Image Manipulation Software built using the C programming language a
 - **GitHub:** [@hasnath1](https://github.com/hasnath1)
 - **Project Link:** [@image_manipulation](https://github.com/hasnath1/image_manipulation)
 
+- **IUP Documentation:** [@IUP](https://www.tecgraf.puc-rio.br/iup/)
 ---
 
 ## ⚙️ System Requirements
