@@ -6,6 +6,8 @@
 
 A graphical Image Manipulation Software built using the C programming language and the IUP toolkit. This application allows users to open 24-bit uncompressed BMP images, perform manual pixel manipulations (such as grayscale, blurring, cropping, and flipping), and save the modified results.
 
+## Screenshots
+
 ## 👨‍💻 Author
 
 - **Name:** Hasnath Abdullah Akanda
