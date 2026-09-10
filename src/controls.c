@@ -107,7 +107,7 @@ int brightness_clb(Ihandle *self)
 
   int adjustment = atoi(str);
 
-  if (adjustment < -255 || adjustment > 255)
+if (adjustment < -255 || adjustment > 255)
   {
     Ihandle *dlg = IupMessageDlg();
 
