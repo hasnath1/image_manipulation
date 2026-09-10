@@ -12,6 +12,15 @@ A graphical Image Manipulation Software built using the C programming language a
 
 ## Screenshots
 
+![1](./demo/1.png)
+![2](./demo/2.png)
+![3](./demo/3.png)
+![4](./demo/4.png)
+![5](./demo/5.png)
+![6](./demo/6.png)
+![7](./demo/7.png)
+![8](./demo/8.png)
+
 ## 👨‍💻 Author
 
 - **Name:** Hasnath Abdullah Akanda
